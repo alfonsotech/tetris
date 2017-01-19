@@ -1,16 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-// import { createStore } from 'redux'
+import { createStore } from 'redux'
 import * as Components from './components'
 import * as Model from './model'
+import * as Mousetrap from 'mousetrap'
 // var Components = require('./components');
 // var Model = require('./model');
 
-var data = [new Model.O(1,1), new Model.L(1,4)];
-// let store = createStore(reducer)
-
-// let counter = 1
-// setInterval(() => store.dispatch({type: 'TICK', data: counter++ }), 1000)
+// let data = [new Model.O(1,1), new Model.L(1,4)]
 
 // function reducer(state = [new Model.O(1,1), new Model.L(1,4)], action) {
 //   switch(action.type) {
@@ -19,10 +16,21 @@ var data = [new Model.O(1,1), new Model.L(1,4)];
 //       return state;
 //     default: return state;
 //   }
-//   return state;
+//   return [new Model.O(1,1), new Model.L(1,4)];
 // }
+function reducer(state = new Model.Game(), action) {
+  switch (action.type) {
+    case 'TICK':
+      return state.tick();
+    case 'ROTATE':
+      return state.rotate();
+    default: return state;
+  }
+}
 
-// store.subscribe( () => {
+// let store = createStore(reducer)
+// store.subscribe(() => {
+//   console.dir(store.getState());
 //   ReactDOM.render(
 //     <div>
 //       {/* TODO: check spacing here before Components; is Babel compiling our ES6 here? */}
@@ -30,6 +38,18 @@ var data = [new Model.O(1,1), new Model.L(1,4)];
 //     </div>, document.getElementById('container')
 //   )
 // })
+//
+// let counter = 1
+// setInterval(() => store.dispatch({type: 'TICK', data: counter++ }), 1000)
+let store = createStore(reducer);
+store.subscribe(() => {
+  ReactDOM.render(<Components.GameView game={store.getState()} />, document.getElementById('container'));
+});
+var counter = 1;
+setInterval(() => store.dispatch({ type: 'TICK' }),500);
+
+Mousetrap.bind('space', function() { store.dispatch({type:'ROTATE'}); });
+
 
 // //Tetronimo constructors
 // const Square = React.createClass({
@@ -97,10 +117,10 @@ var data = [new Model.O(1,1), new Model.L(1,4)];
 // //   }
 // // })
 
-ReactDOM.render(
-  <div>
-  	{data.map(c => <Components.ShapeView shape={c} />)}
-
-  </div>,
-    document.getElementById('container')
-);
+// ReactDOM.render(
+//   <div>
+//   	{data.map(c => <Components.ShapeView shape={c} />)}
+//
+//   </div>,
+//     document.getElementById('container')
+// );
