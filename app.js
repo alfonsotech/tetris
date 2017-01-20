@@ -23,7 +23,7 @@ function reducer(state = new Model.Game(), action) {
   switch (action.type) {
     case 'TICK':
       const revedState = state.tick();
-      setTimeout(() => store.dispatch({type: 'TICK'}), 500);
+        //setTimeout(() => store.dispatch({type: 'TICK'}), 500);
       return revedState;
     case 'ROTATE':
       return state.rotate();
@@ -48,16 +48,16 @@ function reducer(state = new Model.Game(), action) {
 //
 // let counter = 1
 // setInterval(() => store.dispatch({type: 'TICK', data: counter++ }), 1000)
-let store = createStore(reducer);
+let store = createStore(reducer)
 store.subscribe(() => {
-  ReactDOM.render(<Components.GameView game={store.getState()} />, document.getElementById('container'));
-});
-var counter = 1;
-setInterval(() => store.dispatch({ type: 'TICK' }),500);
+  ReactDOM.render(<Components.GameView game={store.getState()} />, document.getElementById('container'))
+})
+var counter = 1
+setInterval(() => store.dispatch({ type: 'TICK' }), 500)
 
-Mousetrap.bind('space', () => store.dispatch({type:'ROTATE'}));
-Mousetrap.bind('left', () => store.dispatch({type:'LEFT'}));
-Mousetrap.bind('right', () => store.dispatch({type:'RIGHT'}));
+Mousetrap.bind('space', () => store.dispatch({type:'ROTATE'}))
+Mousetrap.bind('left', () => store.dispatch({type:'LEFT'}))
+Mousetrap.bind('right', () => store.dispatch({type:'RIGHT'}))
 
 
 // //Tetronimo constructors

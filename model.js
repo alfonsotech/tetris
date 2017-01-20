@@ -7,60 +7,81 @@ export class Point {
   add(otherPoint) {
     return new Point(this.row -1 + otherPoint.row, this.col - 1 + otherPoint.col)
   }
-  fallOne() {
-    return new Point(this.row +1, this.col)
-  }
+  // fallOne() {
+  //   return new Point(this.row +1, this.col)
+  // }
   sameAs(p2) {
     return this.row === p2.row && this.col === p2.col
   }
 }
 
 //Draws/Re-draws shape in specific position
-export class Shape {
+export class Tetromino {
   constructor(name, rotator){
     this.name = name
     this.rotator = rotator
   }
-  at(point){
-    return new Piece(this, point)
-  }
+  // at(point){
+  //   return new Piece(this, point)
+  // }
   pointsRotated(rotation){
     return this.rotator(rotation)
   }
 }
 
 //Throws tetronimos onto gameboard in initial offset location
+// export class Piece {
+//   constructor(shape, offset = new Point(1, 10)) {
+//     this.shape = shape
+//     this.offset = offset
+//     this.rotation = 'N'
+//   }
 export class Piece {
-  constructor(shape, offset = new Point(1, 10)) {
-    this.shape = shape
-    this.offset = offset
-    this.rotation = 'N'
-  }
+   constructor(shape, rows, cols, offset = new Point(1,10)) {
+     this.shape = shape
+     this.rows = rows
+     this.cols = cols
+     this.offset = offset
+     this.rotation = 'N'
+   }
   points() {
-    return this.shape.pointsRotated(this.rotation).map((point, ix) => point.add(this.offset))
-  }
+  //   return this.shape.pointsRotated(this.rotation).map((point, ix) => point.add(this.offset))
+  // }
+  return this.shape.pointsRotated(this.rotation).map(point => point.add(this.offset))
+   }
   maxRow() {
     return Math.max.apply(null, this.points().map(point => point.row))
   }
   maxCol() {
     return Math.max.apply(null, this.points().map(point => point.col))
   }
-  rotate() {
-    const rotations = Piece.rotations()
-    this.rotation = rotations[(rotations.indexOf(this.rotation) + 1) % 4]
-  }
-  left() {
-    this.offset = new Point(this.offset.row, this.offset.col-1)
-  }
-  right() {
-    this.offset = new Point(this.offset.row, this.offset.col+1)
-  }
-  hasPoint(point) {
-    return this.points().some(item => item.sameAs(point))
-  }
-  static rotations() {
-    return ['N', 'E', 'S', 'W']
-  }
+  minCol() {
+     return Math.min.apply(null, this.points().map(point => point.col))
+   }
+   rotate() {
+      this.rotation = Piece.rotations()[(Piece.rotations().indexOf(this.rotation)+1) % 4]
+    }
+    unRotate() {
+      this.rotation = Piece.rotations()[(Piece.rotations().indexOf(this.rotation)-1) % 4]
+    }
+    hasPoint(point) {
+      return this.points().some(item => item.sameAs(point))
+    }
+    fallOne() {
+      this.offset = new Point(this.offset.row+1, this.offset.col)
+    }
+    liftOne() {
+      this.offset = new Point(this.offset.row-1, this.offset.col)
+    }
+    left() {
+      this.offset = new Point(this.offset.row, this.offset.col-1)
+    }
+    right() {
+      this.offset = new Point(this.offset.row, this.offset.col+1)
+    }
+    static rotations() {
+      return ['N','E','S','W']
+    }
 }
 
 export class Game {
@@ -71,28 +92,64 @@ export class Game {
    this.rubble = []
   }
   tick() {
-    this.fallingPiece.offset = this.fallingPiece.offset.fallOne()
-    if (this.fallingPiece.maxRow() >= this.rows) {
-      this.convertToRubble()
-    }
-    return this
+    this.transactionDo(()=>this.fallingPiece.fallOne(), ()=> this.fallingPiece.liftOne())
+     if (this.fallingPiece.maxRow() == this.rows) {
+       this.convertToRubble()
+       return this
+     }
+   var nextPos = this.fallingPiece.points().map(p => new Point(p.row+1,p.col))
+   if (nextPos.some(p => this.rubble.some(r => r.sameAs(p)))) {
+     this.convertToRubble()
+   }
+   return this
   }
   convertToRubble() {
    this.rubble = this.rubble.concat(this.fallingPiece.points())
    this.startAPiece()
  }
  startAPiece() {
-   this.fallingPiece = new Piece(shapes.selectRandom())
+   this.fallingPiece = new Piece(shapes.selectRandom(), this.rows, this.cols);
  }
  rotate() {
-   this.fallingPiece.rotate()
-   return this
+   this.transactionDo(
+     () => this.fallingPiece.rotate(),
+     () => this.fallingPiece.unRotate())
+     return this
+ }
+ // unRotate() {
+ //   this.rotation = Piece.rotations()[(Piece.rotations.indexOf(this.rotation)-1) % 4]
+ // }
+ left() {
+   this.transactionDo(
+     () => this.fallingPiece.left(),
+     () => this.fallingPiece.right())
+     return this
+ }
+ right() {
+   this.transactionDo(
+     () => this.fallingPiece.right(),
+     () => this.fallingPiece.left())
+     return this
+ }
+ transactionDo(thing, compensation) {
+   thing()
+   if(this.fallingPieceIsOutOfBounds() || this.fallingPieceOverLapsRubble()) {
+     compensation()
+   }
+ }
+ fallingPieceIsOutOfBounds() {
+   return this.fallingPiece.minCol() < 1 ||
+   this.fallingPiece.maxCol() > this.cols ||
+   this.fallingPiece.maxRow() > this.rows
+ }
+ fallingPieceOverLapsRubble() {
+   return this.fallingPiece.points().some(p => this.rubble.some(r => r.sameAs(p)))
  }
 }
 
 export var shapes = {
- 'O': new Shape('O', rotation => [new Point(1,1),new Point(1,2), new Point(2,1),new Point(2,2)]),
- 'I': new Shape('I', rotation => {
+ 'O': new Tetromino('O', rotation => [new Point(1,1),new Point(1,2), new Point(2,1),new Point(2,2)]),
+ 'I': new Tetromino('I', rotation => {
    switch (rotation) {
      case 'N': return [new Point(1,1), new Point(2,1),new Point(3,1), new Point(4,1)]
      case 'E': return [new Point(2,1), new Point(2,2),new Point(2,3), new Point(2,4)]
@@ -100,7 +157,7 @@ export var shapes = {
      case 'W': return [new Point(2,1), new Point(2,2),new Point(2,3), new Point(2,4)]
       }
     }),
-  'T': new Shape('T', rotation => {
+  'T': new Tetromino('T', rotation => {
     switch (rotation) {
       case 'N': return [new Point(1,1), new Point(1,2), new Point(2,2), new Point(1,3)]
       case 'E': return [new Point(1,2), new Point(2,2),new Point(3,2), new Point(2,1)]
@@ -108,7 +165,7 @@ export var shapes = {
       case 'W': return [new Point(1,1), new Point(2,1),new Point(3,1), new Point(2,2)]
      }
    }),
- 'L': new Shape('L', rotation => {
+ 'L': new Tetromino('L', rotation => {
    switch (rotation) {
      case 'N': return [new Point(1,1), new Point(2,1), new Point(1,2), new Point(1,3)]
      case 'E': return [new Point(1,1), new Point(1,2), new Point(2,2), new Point(3,2)]
@@ -116,7 +173,7 @@ export var shapes = {
      case 'W': return [new Point(1,1), new Point(2,1), new Point(3,1), new Point(3,2)]
     }
   }),
- 'Z': new Shape('Z', rotation => {
+ 'Z': new Tetromino('Z', rotation => {
    switch (rotation) {
      case 'N': return [new Point(1,1), new Point(1,2), new Point(2,2), new Point(2,3)]
      case 'E': return [new Point(1,2), new Point(2,2),new Point(2,1), new Point(3,1)]
@@ -128,7 +185,6 @@ export var shapes = {
 
 shapes.selectRandom = function() {
     var index = Math.floor(Math.random()*1000000%5)
-    console.log('random index = ' + index)
     return shapes[Object.keys(shapes)[index]]
  }
 
