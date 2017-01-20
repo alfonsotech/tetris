@@ -1,59 +1,55 @@
-/* http://meyerweb.com/eric/tools/css/reset/
-   v2.0 | 20110126
-   License: none (public domain)
-*/
-
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed,
-figure, figcaption, footer, header, hgroup,
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	font-size: 100%;
-	font: inherit;
-	vertical-align: baseline;
-}
-/* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure,
-footer, header, hgroup, menu, nav, section {
-	display: block;
-}
 body {
-	line-height: 1;
+	outline: 1px dotted red;
 }
-ol, ul {
-	list-style: none;
-}
-blockquote, q {
-	quotes: none;
-}
-blockquote:before, blockquote:after,
-q:before, q:after {
-	content: '';
-	content: none;
-}
-table {
-	border-collapse: collapse;
-	border-spacing: 0;
-}
-
 .square {
-  background-color: blue;
-  box-shadow: inset 0 0 10px #0f0;
-  width: 25px;
-  height: 25px;
+  background-color: red;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, .5);
+  width: 18px;
+  height: 18px;
   position:absolute;
 }
-.border {
-  outline: 1px solid red;
+.container-wrap {
+	display: inline-block;
+	float: left;
+	outline: 1px dotted red;
+	background-color: black;
+	opacity: .9;
+}
+.console-wrap {
+	background-color: red;
+	display: inline-block;
+	width: 300px;
+	height: 335px;
+	margin: 0 auto;
+	float: left;
+	padding: 20px;
+	color: white;
+	text-align: center;
+}
+h1 {
+	font-size: 7em;
+		opacity: .9;
+}
+h2 {
+	font-size: 2em;
+text-align: center;
+}
+.score {
+	margin-bottom: .5em;
+}
+.lines {
+	margin-bottom: 1em;
+}
+hr {
+	margin-bottom: 2em;
+	opacity: .4;
+	width: 80%;
+}
+button {
+	background-color: white;
+	text-align: center;
+	width: 100px;
+	height:25px;
+	margin: 10px;
+	opacity: .9;
 }
