@@ -47,7 +47,7 @@ function reducer(state = new Model.Game(), action) {
 // })
 //
 // let counter = 1
-// setInterval(() => store.dispatch({type: 'TICK', data: counter++ }), 1000)
+// setInterval(() => store.dispatch({type: 'TICK', data: counter++ }), 2000)
 let store = createStore(reducer)
 store.subscribe(() => {
   ReactDOM.render(<Components.GameView game={store.getState()} />, document.getElementById('container'))
@@ -64,8 +64,8 @@ Mousetrap.bind('right', () => store.dispatch({type:'RIGHT'}))
 // const Square = React.createClass({
 //     render: () => {
 //     		var s = {
-//         	left: (this.props.col-1) * 25 + 'px',
-//           top: (this.props.row-1) * 25 + 'px'
+//         	left: (this.props.col-1) * 20 + 'px',
+//           top: (this.props.row-1) * 20 + 'px'
 //         }
 //         return <div className="square" style={s}></div>
 //     }

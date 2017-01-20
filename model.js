@@ -31,13 +31,13 @@ export class Tetromino {
 
 //Throws tetronimos onto gameboard in initial offset location
 // export class Piece {
-//   constructor(shape, offset = new Point(1, 10)) {
+//   constructor(shape, offset = new Point(1, 20)) {
 //     this.shape = shape
 //     this.offset = offset
 //     this.rotation = 'N'
 //   }
 export class Piece {
-   constructor(shape, rows, cols, offset = new Point(1,10)) {
+   constructor(shape, rows, cols, offset = new Point(1,20)) {
      this.shape = shape
      this.rows = rows
      this.cols = cols
@@ -184,7 +184,7 @@ export var shapes = {
 }
 
 shapes.selectRandom = function() {
-    var index = Math.floor(Math.random()*1000000%5)
+    var index = Math.floor(Math.random()*2000000%5)
     return shapes[Object.keys(shapes)[index]]
  }
 

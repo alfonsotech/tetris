@@ -17,7 +17,7 @@ let count = 0;
 // });
 export var GameView = React.createClass({
   render: function () {
-    return <div onKeyUp={this.handleKeyUp} className="border" style={{width: this.props.game.cols*25, height: this.props.game.rows*25}}>
+    return <div onKeyUp={this.handleKeyUp} className="border" style={{width: this.props.game.cols*20, height: this.props.game.rows*20}}>
       <PieceView piece={this.props.game.fallingPiece} />
       <RubbleView rubble={this.props.game.rubble} />
     </div>;
@@ -47,8 +47,8 @@ export var RubbleView = React.createClass({
 export var Square = React.createClass({
   render: function() {
     var s = {
-      left: (this.props.col-1) * 25 + 'px',
-      top: (this.props.row-1) * 25 + 'px'
+      left: (this.props.col-1) * 20 + 'px',
+      top: (this.props.row-1) * 20 + 'px'
     }
     return <div className="square" style={s}></div>
    }
