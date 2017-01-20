@@ -34,6 +34,12 @@ h2 {
 	font-size: 2em;
 text-align: center;
 }
+p {
+	font-size: .68em;
+	margin-bottom: -25px;
+	padding-left: 10px;
+	text-align: center;
+}
 .score {
 	margin-bottom: .5em;
 }
@@ -52,4 +58,5 @@ button {
 	height:25px;
 	margin: 10px;
 	opacity: .9;
+	border-radius: 5px;
 }

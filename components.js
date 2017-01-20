@@ -1,20 +1,8 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 
-// export class ShapeView extends React.Component {
-//   render() {
-//     return
-//   }
-// }
 let count = 0;
 
-// export var ShapeView = React.createClass({
-//  render: function() {
-//    return <div>
-//      {this.props.shape.squares().map(sq => <Square row={sq.row} col={sq.col} />)}
-//    </div>;
-//  }
-// });
 export var GameView = React.createClass({
   render: function () {
     return <div onKeyUp={this.handleKeyUp} className="border" style={{width: this.props.game.cols*25, height: this.props.game.rows*25}}>
@@ -53,25 +41,3 @@ export var Square = React.createClass({
     return <div className="square" style={s}></div>
    }
   });
-
- //  export var LShape = React.createClass({
- //  	render: function () {
- //    	return <div>
- //        <Square row={this.props.row} col={this.props.col} />
- //   		  <Square row={this.props.row+1} col={this.props.col} />
- //        <Square row={this.props.row+2} col={this.props.col} />
- //   	    <Square row={this.props.row+3} col={this.props.col} />
- //     </div>;
- //   }
- // });
- //
- // export var SShape = React.createClass({
- // 	render: function () {
- //   	return <div>
- //     	<Square row={this.props.row} col={this.props.col+1} />
- //   		<Square row={this.props.row} col={this.props.col+2} />
- //       <Square row={this.props.row+1} col={this.props.col} />
- //   		<Square row={this.props.row+1} col={this.props.col+1} />
- //     </div>;
- //   }
- // });
