@@ -1,4 +1,4 @@
-//Draws one square; adds func to re-draw square in new shape, drop one row, or keep in the same position
+//Draws one square
 export class Point {
   constructor(row,col) {
     this.row = row
@@ -7,9 +7,6 @@ export class Point {
   add(otherPoint) {
     return new Point(this.row -1 + otherPoint.row, this.col - 1 + otherPoint.col)
   }
-  // fallOne() {
-  //   return new Point(this.row +1, this.col)
-  // }
   sameAs(p2) {
     return this.row === p2.row && this.col === p2.col
   }
@@ -21,21 +18,11 @@ export class Tetromino {
     this.name = name
     this.rotator = rotator
   }
-  // at(point){
-  //   return new Piece(this, point)
-  // }
   pointsRotated(rotation){
     return this.rotator(rotation)
   }
 }
 
-//Throws tetronimos onto gameboard in initial offset location
-// export class Piece {
-//   constructor(shape, offset = new Point(1, 10)) {
-//     this.shape = shape
-//     this.offset = offset
-//     this.rotation = 'N'
-//   }
 export class Piece {
    constructor(shape, rows, cols, offset = new Point(1,10)) {
      this.shape = shape
@@ -45,8 +32,6 @@ export class Piece {
      this.rotation = 'N'
    }
   points() {
-  //   return this.shape.pointsRotated(this.rotation).map((point, ix) => point.add(this.offset))
-  // }
   return this.shape.pointsRotated(this.rotation).map(point => point.add(this.offset))
    }
   maxRow() {
@@ -106,19 +91,16 @@ export class Game {
   convertToRubble() {
    this.rubble = this.rubble.concat(this.fallingPiece.points())
    this.startAPiece()
- }
- startAPiece() {
-   this.fallingPiece = new Piece(shapes.selectRandom(), this.rows, this.cols);
- }
- rotate() {
-   this.transactionDo(
-     () => this.fallingPiece.rotate(),
-     () => this.fallingPiece.unRotate())
-     return this
- }
- // unRotate() {
- //   this.rotation = Piece.rotations()[(Piece.rotations.indexOf(this.rotation)-1) % 4]
- // }
+   }
+   startAPiece() {
+     this.fallingPiece = new Piece(shapes.selectRandom(), this.rows, this.cols);
+   }
+   rotate() {
+     this.transactionDo(
+       () => this.fallingPiece.rotate(),
+       () => this.fallingPiece.unRotate())
+       return this
+    }
  left() {
    this.transactionDo(
      () => this.fallingPiece.left(),
@@ -187,30 +169,3 @@ shapes.selectRandom = function() {
     var index = Math.floor(Math.random()*1000000%5)
     return shapes[Object.keys(shapes)[index]]
  }
-
-// export class Sqr {
-//   constructor(row, col) {
-//     this.row = row
-//     this.col = col
-//   }
-// }
-//
-// export class O {
-//   constructor(row, col) {
-//     this.row = row
-//     this.col = col
-//   }
-//   squares() {
-//     return [new Sqr(this.row, this.col), new Sqr(this.row, this.col + 1), new Sqr(this.row + 1, this.col), new Sqr(this.row + 1, this.col + 1)];
-//   }
-// }
-//
-// export class L {
-//   constructor(row, col) {
-//     this.row = row
-//     this.col = col
-//   }
-//   squares() {
-//     return [new Sqr(this.row, this.col), new Sqr(this.row + 1, this.col), new Sqr(this.row + 2, this.col), new Sqr(this.row + 2, this.col + 1)];
-//   }
-// }
