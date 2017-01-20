@@ -21,7 +21,6 @@ function reducer(state = new Model.Game(), action) {
   }
 }
 
-console.log('button clicked');
 let store = createStore(reducer)
 store.subscribe(() => {
   ReactDOM.render(<Components.GameView game={store.getState()} />, document.getElementById('container'))
