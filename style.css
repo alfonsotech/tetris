@@ -12,7 +12,7 @@ body {
 	display: inline-block;
 	float: left;
 	outline: 1px dotted red;
-	background-color: black;
+	background-color: gray;
 	opacity: .9;
 }
 .console-wrap {
@@ -59,4 +59,9 @@ button {
 	margin: 10px;
 	opacity: .9;
 	border-radius: 5px;
+}
+span{
+	background-color: white;
+	font-color: red;
+	font-size: 30px;
 }

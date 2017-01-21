@@ -1,3 +1,5 @@
+import * as _ from 'underscore'
+
 //Draws one square
 export class Point {
   constructor(row,col) {
@@ -69,12 +71,14 @@ export class Piece {
     }
 }
 
+//added this.score 
 export class Game {
  constructor() {
    this.startAPiece()
    this.rows = 15
    this.cols = 20
    this.rubble = []
+   this.score = 0
   }
   tick() {
     this.transactionDo(()=>this.fallingPiece.fallOne(), ()=> this.fallingPiece.liftOne())
@@ -89,11 +93,34 @@ export class Game {
    return this
   }
   convertToRubble() {
-   this.rubble = this.rubble.concat(this.fallingPiece.points())
-   this.startAPiece()
+  this.rubble = this.rubble.concat(this.fallingPiece.points())
+  const completedRows = this.completedRows()
+  completedRows.forEach(r => this.collapseRow(r))
+  this.score += this.calculateAward(completedRows)
+  if (!this.isGameOver()) {
+    this.startAPiece();
+  }
+}
+  // convertToRubble() {
+  //  this.rubble = this.rubble.concat(this.fallingPiece.points())
+  //  this.completedRows().forEach(this.collapseRow)
+  //  this.startAPiece()
+  //  }
+   completedRows() {
+   return _.range(1,this.rows+1).filter(row =>
+     _.range(1,this.cols+1).every(col => this.rubbleHas(row,col))
+   )
+   }
+   collapseRow(row) {
+     this.rubble = this.rubble.filter(point => point.row !== row)
+     this.rubble.filter(point => point.row < row).forEach(point => point.row += 1)
+     // todo: shuffle higher rubble down
+   }
+   rubbleHas(row,col) {
+     return this.rubble.some(point => point.row === row && point.col === col)
    }
    startAPiece() {
-     this.fallingPiece = new Piece(shapes.selectRandom(), this.rows, this.cols);
+     this.fallingPiece = new Piece(shapes.selectRandom(), this.rows, this.cols)
    }
    rotate() {
      this.transactionDo(
@@ -127,6 +154,19 @@ export class Game {
  fallingPieceOverLapsRubble() {
    return this.fallingPiece.points().some(p => this.rubble.some(r => r.sameAs(p)))
  }
+ calculateAward(completedRows) {
+  const map = {
+    0: 0,
+    1: 40,
+    2: 100,
+    3: 300,
+    4: 1200
+  }
+  return map[completedRows.length]
+}
+ isGameOver() {
+    return this.rubble.some(point => point.row === 1)
+  }
 }
 
 export var shapes = {
